@@ -22,7 +22,7 @@ def _make_headers(api_id):
 
 def get_account_balance():
     headers = _make_headers(AccountStatus.api_id)
-    body = {"qry_tp": "1", "dmst_stex_tp": "NXT"}
+    body = {"qry_tp": "1", "dmst_stex_tp": "KRX"}
     url = f"{settings.BASE_URL}{AccountStatus.path}"
     response = requests.post(
         f"{settings.BASE_URL}{AccountStatus.path}", headers=headers, json=body

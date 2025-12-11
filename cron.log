@@ -1,0 +1,17 @@
+{'expires_dt': '20251212180612', 'return_msg': '정상적으로 처리되었습니다', 'token_type': 'Bearer', 'return_code': 0, 'token': 'amFPWwdeMZ0gCaGO82-aNjO-HYT6NrOaZha6R9Ney8AOpz3vhJuDbwHw5P1yP3bNWrq8bD-ti8u_VrdYX54k-w'}
+DB 저장 완료
+{'expires_dt': '20251212180612', 'return_msg': '정상적으로 처리되었습니다', 'token_type': 'Bearer', 'return_code': 0, 'token': 'amFPWwdeMZ0gCaGO82-aNjO-HYT6NrOaZha6R9Ney8AOpz3vhJuDbwHw5P1yP3bNWrq8bD-ti8u_VrdYX54k-w'}
+Traceback (most recent call last):
+  File "/home/brighter87/Projects/assetmanager/main.py", line 26, in <module>
+    main()
+  File "/home/brighter87/Projects/assetmanager/main.py", line 10, in main
+    if not is_krx_trading_day():
+  File "/home/brighter87/Projects/assetmanager/utils/krx_calendar.py", line 105, in is_krx_trading_day
+    holidays = holidays_for_year(d.year)
+  File "/home/brighter87/Projects/assetmanager/utils/krx_calendar.py", line 88, in holidays_for_year
+    return _fetch_holidays_from_krx(year)
+  File "/home/brighter87/Projects/assetmanager/utils/krx_calendar.py", line 70, in _fetch_holidays_from_krx
+    resp.raise_for_status()
+  File "/home/brighter87/Projects/assetmanager/venv/lib/python3.10/site-packages/requests/models.py", line 1026, in raise_for_status
+    raise HTTPError(http_error_msg, response=self)
+requests.exceptions.HTTPError: 403 Client Error: Forbidden for url: https://marketdata.krx.co.kr/contents/MKD/99/MKD99000001.jspx?gridTp=KRX&search_bas_yy=2025&pagePath=%2Fcontents%2FMKD%2F01%2F0110%2F01100305%2FMKD01100305.jsp&code=%3Chtml+lang%3D%22ko%22%3E%0D%0A%3Chead%3E%0D%0A++%3Cmeta+charset%3D%22utf-8%22%3E%0D%0A++%3Cmeta+http-equiv%3D%22Content-Type%22+content%3D%22text%2Fhtml%3B+charset%3DUTF-8%22%3E%0D%0A++%3Ctitle%3E%EC%A0%95%EB%B3%B4%EB%8D%B0%EC%9D%B4%ED%84%B0%EC%8B%9C%EC%8A%A4%ED%85%9C%3C%2Ftitle%3E%0D%0A++%3Cscript+type%3D%22text%2Fjavascript%22+src%3D%22%2FWEB-APP%2Fwebponent%2Fci%2Fagent.js%22%3E%3C%2Fscript%3E%0D%0A%3C%2Fhead%3E%0D%0A%3Cbody%3E%0D%0A%3Cscript%3E%0D%0A++if+%28ci.agent.isMobile%29+%7B%0D%0A++++window.location.href%3D%27%2Fcontents%2FMMC%2FMAIN%2Fmain%2Findex.cmd%27%3B%0D%0A++%7D+else+%7B%0D%0A++++window.location.href%3D%27%2Fcontents%2FMDC%2FMAIN%2Fmain%2Findex.cmd%27%3B%0D%0A++%7D%0D%0A%3C%2Fscript%3E%0D%0A%3C%2Fbody%3E%0D%0A%3C%2Fhtml%3E
