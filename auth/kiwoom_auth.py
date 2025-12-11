@@ -1,13 +1,15 @@
 import requests
 from config.settings import Settings
 
+
 def get_access_token() -> str:
-    url = f"{Settings.BASE_URL}/oauth2/token"
+    settings = Settings()
+    url = f"{settings.BASE_URL}/oauth2/token"
 
     payload = {
         "grant_type": "client_credentials",
-        "appkey": Settings.APP_KEY,
-        "secretkey": Settings.SECRET_KEY
+        "appkey": settings.APP_KEY,
+        "secretkey": settings.SECRET_KEY,
     }
 
     response = requests.post(url, json=payload)
