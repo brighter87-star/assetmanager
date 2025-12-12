@@ -2,7 +2,7 @@ import json
 
 import requests
 from auth.kiwoom_auth import get_access_token
-from config.api_endpoints import AccountStatus, RealizedPnLDaily
+from config.api_endpoints import AccountStatus, AccountTradeHistory, RealizedPnLDaily
 from config.settings import Settings
 
 settings = Settings()
@@ -39,3 +39,57 @@ def get_realized_pnl_daily(date: str):
     )
     response.raise_for_status()
     return json.loads(response.text)
+
+
+def get_account_trade_history(
+    ord_dt: str | None = None,
+    qry_tp: str = "4",
+    stk_bond_tp: str = "0",
+    sell_tp: str = "0",
+    stk_cd: str | None = None,
+    dmst_stex_tp: str = "%",
+):
+
+    headers = _make_headers(AccountTradeHistory.api_id)
+
+    body = {
+        "ord_dt": ord_dt,
+        "qry_tp": qry_tp,
+        "stk_bond_tp": stk_bond_tp,
+        "sell_tp": sell_tp,
+        "stk_cd": stk_cd or "",
+        "fr_ord_no": "",
+        "dmst_stex_tp": dmst_stex_tp,
+    }
+
+    all_trades: list[dict] = []
+
+    cont_yn = "N"
+    next_key = ""
+
+    while True:
+        if cont_yn == "Y":
+            headers["cont-yn"] = "Y"
+            headers["next-key"] = next_key
+
+        resp = requests.post(
+            url=f"{settings.BASE_URL}{AccountTradeHistory.path}",
+            headers=headers,
+            json=body,
+        )
+        resp.raise_for_status()
+
+        data = resp.json()
+
+        # 1) body: 체결내역 수집
+        trades = data.get("acnt_ord_cntr_prps_dtl", [])
+        all_trades.extend(trades)
+
+        # 2) header: 연속조회 여부 확인
+        cont_yn = resp.headers.get("cont-yn", "N")
+        next_key = resp.headers.get("next-key", "")
+
+        if cont_yn != "Y":
+            break
+
+    return all_trades

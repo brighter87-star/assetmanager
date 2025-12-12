@@ -6,3 +6,8 @@ class AccountStatus:
 class RealizedPnLDaily:
     api_id = "ka10072"
     path = "/api/dostk/acnt"
+
+
+class AccountTradeHistory:
+    api_id: str = "kt00007"
+    path = "/api/dostk/acnt"
