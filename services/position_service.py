@@ -72,7 +72,7 @@ class Lot:
     remaining_qty: int
     stk_cd: str
     stk_nm: str
-    crd_tp: str
+    crd_class: str
 
 
 def build_lifo_lot_matches(
@@ -119,7 +119,7 @@ def build_lifo_lot_matches(
               ord_tm,
               stk_cd,
               stk_nm,
-              crd_tp,
+              crd_class,
               io_tp_nm,
               cntr_qty,
               cntr_uv
@@ -136,7 +136,7 @@ def build_lifo_lot_matches(
 
         insert_sql = """
             INSERT INTO lot_matches (
-              stk_cd, stk_nm, crd_tp,
+              stk_cd, stk_nm, crd_class,
               buy_source_id, sell_source_id,
               buy_dt, sell_dt,
               buy_px, sell_px,
@@ -160,9 +160,11 @@ def build_lifo_lot_matches(
 
             stk_cd = (r.get("stk_cd") or "").strip()
             stk_nm = (r.get("stk_nm") or "").strip()
-            crd_tp = (r.get("crd_tp") or "").strip()
+            # crd_tp = (r.get("crd_tp") or "").strip()
+            crd_class = (r.get("crd_class") or "").strip()
 
-            key = (stk_cd, crd_tp)
+            # key = (stk_cd, crd_tp)
+            key = (stk_cd, crd_class)
             stacks.setdefault(key, [])
 
             dt = _combine_dt(r.get("trade_date"), r.get("ord_tm"))
@@ -181,7 +183,7 @@ def build_lifo_lot_matches(
                         remaining_qty=qty,
                         stk_cd=stk_cd,
                         stk_nm=stk_nm,
-                        crd_tp=crd_tp,
+                        crd_class=crd_class,
                     )
                 )
                 continue
@@ -205,7 +207,7 @@ def build_lifo_lot_matches(
                     (
                         stk_cd,
                         stk_nm,
-                        crd_tp,
+                        crd_class,
                         lot.buy_source_id,
                         sell_source_id,
                         lot.buy_dt,
@@ -252,7 +254,7 @@ def build_position_episodes(
               ord_tm,
               stk_cd,
               stk_nm,
-              crd_tp,
+              crd_class,
               io_tp_nm,
               cntr_qty
             FROM account_trade_history
@@ -282,9 +284,11 @@ def build_position_episodes(
 
             stk_cd = (r.get("stk_cd") or "").strip()
             stk_nm = (r.get("stk_nm") or "").strip()
-            crd_tp = (r.get("crd_tp") or "").strip()
+            crd_class = (r.get("crd_class") or "").strip()
+            # crd_tp = (r.get("crd_tp") or "").strip()
 
-            key = (stk_cd, crd_tp)
+            # key = (stk_cd, crd_tp)
+            key = (stk_cd, crd_class)
             pos_qty.setdefault(key, 0)
             episode_seq.setdefault(key, 0)
 
@@ -303,7 +307,7 @@ def build_position_episodes(
                 open_episode[key] = {
                     "stk_cd": stk_cd,
                     "stk_nm": stk_nm,
-                    "crd_tp": crd_tp,
+                    "crd_class": crd_class,
                     "episode_seq": episode_seq[key],
                     "start_dt": dt,
                     "start_qty": after,
@@ -318,7 +322,7 @@ def build_position_episodes(
                         (
                             ep["stk_cd"],
                             ep["stk_nm"],
-                            ep["crd_tp"],
+                            ep["crd_class"],
                             ep["episode_seq"],
                             ep["start_dt"],
                             dt,
@@ -335,7 +339,7 @@ def build_position_episodes(
                 (
                     ep["stk_cd"],
                     ep["stk_nm"],
-                    ep["crd_tp"],
+                    ep["crd_class"],
                     ep["episode_seq"],
                     ep["start_dt"],
                     None,

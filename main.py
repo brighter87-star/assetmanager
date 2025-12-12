@@ -21,7 +21,7 @@ def main():
         print("오늘은 KRX 휴장일입니다. 스크립트를 종료합니다.")
         return
     # date = datetime.now().strftime("%Y%m%d")
-    date = "20251206"
+    date = "20251212"
     asset_data = get_account_balance()
     pnl_data = get_realized_pnl_daily(date)
     trades_data = get_account_trade_history(ord_dt=date)
