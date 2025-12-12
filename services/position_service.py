@@ -269,7 +269,7 @@ def build_position_episodes(
 
         insert_sql = """
             INSERT INTO position_episodes (
-              stk_cd, stk_nm, crd_tp,
+              stk_cd, stk_nm, crd_class,
               episode_seq,
               start_dt, end_dt,
               start_qty, end_qty
