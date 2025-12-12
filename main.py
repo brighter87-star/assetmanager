@@ -30,7 +30,7 @@ def main():
         save_account_data(conn, asset_data)
         save_realized_pnl_daily(conn, pnl_data, query_date=date)
         save_account_trade_history(conn, trades_data, trade_date=date)
-        build_lifo_lot_matches(conn, start_date="2025-12-01", end_date="2025-12-12")
+        build_lifo_lot_matches(conn, start_date="2025-12-01", end_date=date)
         build_position_episodes(conn)
         print("DB 저장 완료")
     finally:
