@@ -1,44 +1,48 @@
 import json
+from typing import Mapping, Optional
 
 import requests
 from auth.kiwoom_auth import get_access_token
 from config.api_endpoints import AccountStatus, AccountTradeHistory, RealizedPnLDaily
 from config.settings import Settings
 
+from clients.client import request_json
+
 settings = Settings()
 access_token = get_access_token()
 
 
-def _make_headers(api_id):
+def _make_headers(api_id: str, extra_headers: Optional[Mapping[str, str]] = None):
     """
     api_id를 입력받아 공통 kiwoom api header 생성
     """
-    return {
+
+    headers = {
         "Authorization": f"Bearer {access_token}",
         "Content-Type": "application/json",
         "api-id": api_id,
     }
 
+    if extra_headers:
+        headers.update(extra_headers)
 
-def get_account_balance():
+    return headers
+
+
+def get_account_balance(qry_tp: str = "1", dmst_stex_tp="KRX"):
     headers = _make_headers(AccountStatus.api_id)
-    body = {"qry_tp": "1", "dmst_stex_tp": "KRX"}
-    url = f"{settings.BASE_URL}{AccountStatus.path}"
-    response = requests.post(
-        f"{settings.BASE_URL}{AccountStatus.path}", headers=headers, json=body
-    )
-    response.raise_for_status()
-    return json.loads(response.text)
+    body = {"qry_tp": qry_tp, "dmst_stex_tp": dmst_stex_tp}
+    return request_json(
+        method="POST", path=AccountStatus.path, headers=headers, json_body=body
+    ).data
 
 
 def get_realized_pnl_daily(date: str):
     headers = _make_headers(RealizedPnLDaily.api_id)
     body = {"strt_dt": date, "end_dt": date}
-    response = requests.post(
-        f"{settings.BASE_URL}{RealizedPnLDaily.path}", headers=headers, json=body
-    )
-    response.raise_for_status()
-    return json.loads(response.text)
+    return request_json(
+        method="POST", path=RealizedPnLDaily.path, headers=headers, json_body=body
+    ).data
 
 
 def get_account_trade_history(
@@ -72,17 +76,14 @@ def get_account_trade_history(
             headers["cont-yn"] = "Y"
             headers["next-key"] = next_key
 
-        resp = requests.post(
-            url=f"{settings.BASE_URL}{AccountTradeHistory.path}",
+        resp = request_json(
+            method="POST",
+            path=AccountTradeHistory.path,
             headers=headers,
-            json=body,
+            json_body=body,
         )
-        resp.raise_for_status()
-
-        data = resp.json()
-
         # 1) body: 체결내역 수집
-        trades = data.get("acnt_ord_cntr_prps_dtl", [])
+        trades = resp.data.get("acnt_ord_cntr_prps_dtl", [])
         all_trades.extend(trades)
 
         # 2) header: 연속조회 여부 확인

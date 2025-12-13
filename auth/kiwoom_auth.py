@@ -15,6 +15,4 @@ def get_access_token() -> str:
     response = requests.post(url, json=payload)
     response.raise_for_status()
 
-    print(response.json())
-
     return response.json()["token"]
